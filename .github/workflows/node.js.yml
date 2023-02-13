@@ -28,14 +28,20 @@ jobs:
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17'        
+        java-version: '17'
     - name: Analyze code with SonarQube
       run: |
         npx sonar-scanner \
           -Dsonar.projectKey=avin0371_node_js_smp \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          
+    - run: |
+          echo 'I am failing'
+          exit 1
+    - name: Cancelling parallel jobs
+      if: failure()
+      uses: andymckay/cancel-action@0.2
+      
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
